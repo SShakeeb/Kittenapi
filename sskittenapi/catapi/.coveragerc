@@ -1,0 +1,6 @@
+[run]
+omit = catapi/gunicorn_config.py
+data_file = /tmp/.catapi.coverage
+
+[xml]
+output = /tmp/.catapi.coverage.xml
