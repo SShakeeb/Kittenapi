@@ -297,3 +297,58 @@ async def test_find_many(
     )
 
     assert found_cat_summaries == expected_cat_summaries
+
+
+@pytest.mark.parametrize(
+    "existing_cat_documents, cat_id, deleted_cat",
+    [
+        (
+            [
+                {
+                    "_id": ObjectId("000000000000000000000101"),
+                    "name": "Sammybridge Cat",
+                    "ctime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                    "mtime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                },
+                {
+                    "_id": ObjectId("000000000000000000000102"),
+                    "name": "Shirasu Sleep Industries Cat",
+                    "ctime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                    "mtime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                },
+            ],
+            dto.CatID("000000000000000000000101"),
+            True,
+        ),
+        (
+            [
+                {
+                    "_id": ObjectId("000000000000000000000101"),
+                    "name": "Sammybridge Cat",
+                    "ctime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                    "mtime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                },
+                {
+                    "_id": ObjectId("000000000000000000000102"),
+                    "name": "Shirasu Sleep Industries Cat",
+                    "ctime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                    "mtime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                },
+            ],
+            dto.CatID("000000000000000000000000"),
+            False,
+        ),
+    ],
+)
+@conftest.async_test
+async def test_delete_cat_successful(
+    existing_cat_documents: List[BSONDocument],
+    cat_id: dto.CatID,
+    deleted_cat: bool,
+) -> None:
+    collection = await get_collection(cat_model._COLLECTION_NAME)
+    await collection.insert_many(existing_cat_documents)
+
+    deleted_cat = await cat_model.delete_cat(cat_id)
+
+    assert deleted_cat == deleted_cat

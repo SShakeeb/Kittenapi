@@ -79,3 +79,19 @@ async def list_cats(
     return dto.ListResponse[dto.CatSummary](
         results=cat_summary_list_response, metadata=cats.metadata
     )
+
+
+@router.delete(
+    "/cats/{cat_id}", response_model=dto.CatDeleteResponse, response_model_exclude_unset=True
+)
+async def delete_cat(
+    cat_id: dto.CatID = Path(..., title="Cat ID", description="The ID of the cat to delete."),
+) -> dto.CatDeleteResponse:
+    """
+    Detail view for deleting one Cat by ID.
+
+    \f
+    :return:
+    """
+    await cat_domain.delete_cat(cat_id)
+    return dto.CatDeleteResponse(message="Cat deleted successfully.")

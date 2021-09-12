@@ -202,3 +202,14 @@ def test_list_cats(
         cat_sort_params=expected_cat_sort_params,
         page=expected_page,
     )
+
+
+@mock.patch("catapi.domains.cat_domain.delete_cat")
+def test_delete_cat_success(
+    mock_cat_domain_delete_cat: mock.Mock,
+) -> None:
+    cat_id = dto.CatID("000000000000000000000101")
+    response = client.delete(f"/v1/cats/{cat_id}")
+    assert response.json() == {"message": "Cat deleted successfully."}
+
+    mock_cat_domain_delete_cat.assert_called_once_with(cat_id)

@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from catapi import dto
+from catapi import dto, exceptions
 from catapi.libs import dates
 from catapi.models import cat_model
 
@@ -28,3 +28,10 @@ async def find_many(
         page=page,
     )
     return results
+
+
+async def delete_cat(cat_id: dto.CatID) -> bool:
+    deleted = await cat_model.delete_cat(cat_id)
+    if not deleted:
+        raise exceptions.CatNotFoundError(f"Cat {cat_id} does not exists.")
+    return deleted

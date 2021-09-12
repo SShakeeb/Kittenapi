@@ -120,3 +120,7 @@ class StatusViewResponse(BaseModel):
 class ListResponse(GenericModel, Generic[ResponseT]):
     results: List[ResponseT]
     metadata: PageMetadata
+
+
+class CatDeleteResponse(BaseModel):
+    message: str
