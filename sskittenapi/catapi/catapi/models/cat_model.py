@@ -8,7 +8,7 @@ import pymongo.errors
 from bson import ObjectId
 
 from catapi import config, dto
-from catapi.exceptions import DuplicateCatError, EmptyResultsFilter
+from catapi.exceptions import CatNotDeleteError, DuplicateCatError, EmptyResultsFilter
 from catapi.models.common import (
     BSONDocument,
     _calculate_db_skip_value,
@@ -103,6 +103,15 @@ async def find_many(
     return dto.PagedResult[dto.CatSummary](
         results=cat_summaries, metadata=dto.PageMetadata(has_next_page=has_next_page)
     )
+
+
+async def delete_cat(cat_id: dto.CatID) -> bool:
+    collection = await get_collection(_COLLECTION_NAME)
+    query = {"_id": ObjectId(cat_id)}
+    result = await collection.delete_one(query)
+    if not result:
+        raise CatNotDeleteError(f"Cat {cat_id} did not deleted.")
+    return result.deleted_count == 1
 
 
 def cat_sort_params_to_db_sort(

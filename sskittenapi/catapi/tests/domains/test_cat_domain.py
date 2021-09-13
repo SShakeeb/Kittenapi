@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-from catapi import dto
+from catapi import dto, exceptions
 from catapi.domains import cat_domain
 from tests import conftest
 
@@ -98,3 +98,26 @@ async def test_find_many(
         cat_sort_params=cat_sort_params,
         page=page,
     )
+
+
+@mock.patch("catapi.models.cat_model.delete_cat")
+@conftest.async_test
+async def test_delete_cat_success(mock_cat_model_delete_cat: mock.Mock) -> None:
+
+    cat_id = dto.CatID("000000000000000000000101")
+    mock_cat_model_delete_cat.return_value = True
+
+    actual = await cat_domain.delete_cat(cat_id)
+    assert actual is True
+    mock_cat_model_delete_cat.assert_called_once_with(cat_id)
+
+
+@mock.patch("catapi.models.cat_model.delete_cat")
+@conftest.async_test
+async def test_delete_cat_error_entity_not_found(mock_cat_model_delete_cat: mock.Mock) -> None:
+
+    cat_id = dto.CatID("000000000000000000000101")
+    mock_cat_model_delete_cat.return_value = False
+    with pytest.raises(exceptions.CatNotFoundError):
+        await cat_domain.delete_cat(cat_id)
+    mock_cat_model_delete_cat.assert_called_once_with(cat_id)

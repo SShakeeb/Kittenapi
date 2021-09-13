@@ -24,3 +24,7 @@ class EntityNotFoundError(CatapiError):
 
 class CatNotFoundError(EntityNotFoundError):
     pass
+
+
+class CatNotDeleteError(CatapiError):
+    pass

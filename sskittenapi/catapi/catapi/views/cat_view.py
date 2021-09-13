@@ -79,3 +79,21 @@ async def list_cats(
     return dto.ListResponse[dto.CatSummary](
         results=cat_summary_list_response, metadata=cats.metadata
     )
+
+
+@router.delete(
+    "/cats/{cat_id}",
+    status_code=status.HTTP_200_OK,
+    response_model_exclude_unset=True,
+)
+async def delete_cat(
+    cat_id: dto.CatID = Path(..., title="Cat ID", description="The ID of the cat to delete."),
+) -> dto.JSON:
+    """
+    Detail view for deleting one Cat by ID.
+
+    \f
+    :return:
+    """
+    await cat_domain.delete_cat(cat_id)
+    raise HTTPException(status_code=status.HTTP_200_OK, detail="Cat deleted successfully.")
