@@ -33,6 +33,15 @@ SENTRY_DSN = os.getenv("SENTRY_DSN")
 ELASTIC_APM_ENABLED = _get_boolean_env_variable("ELASTIC_APM_ENABLED")
 ELASTIC_APM_SERVER_URL = os.getenv("ELASTIC_APM_SERVER_URL")
 
+ALLOWED_ORIGINS_REGEXPES = [
+    "http://localhost[^\\.]*$",
+    "https://ai\\.gengo\\.test$",
+    "https://.*\\.telusinternational\\.ai$",
+    "https://.*\\.lionbridgeai\\.com$",
+    "https://.*\\.lionbridge\\.com$",
+    "capacitor://localhost$",
+]
+
 # ====== Feature flags ======
 ENABLE_FOO = _get_boolean_env_variable("ENABLE_FOO")
 ENABLE_BAR = _get_boolean_env_variable("ENABLE_BAR")
