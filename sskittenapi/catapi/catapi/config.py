@@ -35,11 +35,6 @@ ELASTIC_APM_SERVER_URL = os.getenv("ELASTIC_APM_SERVER_URL")
 
 ALLOWED_ORIGINS_REGEXPES = [
     "http://localhost[^\\.]*$",
-    "https://ai\\.gengo\\.test$",
-    "https://.*\\.telusinternational\\.ai$",
-    "https://.*\\.lionbridgeai\\.com$",
-    "https://.*\\.lionbridge\\.com$",
-    "capacitor://localhost$",
 ]
 
 # ====== Feature flags ======
