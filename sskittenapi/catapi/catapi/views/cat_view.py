@@ -95,5 +95,5 @@ async def delete_cat(
     \f
     :return:
     """
-    cat = await cat_domain.delete_cat(cat_id)
+    await cat_domain.delete_cat(cat_id)
     raise HTTPException(status_code=status.HTTP_200_OK, detail="Cat deleted successfully.")
