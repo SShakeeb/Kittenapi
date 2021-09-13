@@ -204,12 +204,19 @@ def test_list_cats(
     )
 
 
+@pytest.mark.parametrize(
+    "expected_response",
+    [
+        ({"detail": "Cat deleted successfully."}),
+    ],
+)
 @mock.patch("catapi.domains.cat_domain.delete_cat")
 def test_delete_cat_success(
     mock_cat_domain_delete_cat: mock.Mock,
+    expected_response: dto.JSON,
 ) -> None:
     cat_id = dto.CatID("000000000000000000000101")
     response = client.delete(f"/v1/cats/{cat_id}")
-    assert response.json() == {"message": "Cat deleted successfully."}
+    assert (response.status_code, response.json()) == (200, expected_response)
 
     mock_cat_domain_delete_cat.assert_called_once_with(cat_id)
