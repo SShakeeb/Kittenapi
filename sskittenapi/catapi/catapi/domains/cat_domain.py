@@ -38,10 +38,10 @@ async def delete_cat(cat_id: dto.CatID) -> bool:
 
 
 async def partial_update_cat(
-    partial_update_cat: dto.PartialUpdateCat, cat_filter: dto.CatFilter
+    partial_update_cat: dto.PartialUpdateCat, cat_id: dto.CatID
 ) -> Optional[dto.Cat]:
     cat = await cat_model.partial_update_cat(
         partial_update_cat,
-        cat_filter,
+        cat_id,
     )
     return cat

@@ -91,9 +91,9 @@ class Cat(BaseModel):
 
 class CatUrl(BaseModel):
     id: CatID
-    name: str
-    ctime: datetime
-    mtime: datetime
+    name: Optional[str]
+    ctime: Optional[datetime]
+    mtime: Optional[datetime]
     url: Optional[str]
 
 

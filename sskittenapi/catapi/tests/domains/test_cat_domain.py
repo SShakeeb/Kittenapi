@@ -124,7 +124,7 @@ async def test_delete_cat_error_entity_not_found(mock_cat_model_delete_cat: mock
 
 
 @pytest.mark.parametrize(
-    "partial_update_cat, cat_filter",
+    "partial_update_cat, cat_id",
     [
         (
             dto.PartialUpdateCat(
@@ -145,10 +145,10 @@ async def test_delete_cat_error_entity_not_found(mock_cat_model_delete_cat: mock
 async def test_partial_update_cat(
     mock_cat_model_partial_update_cat: mock.Mock,
     partial_update_cat: dto.PartialUpdateCat,
-    cat_filter: dto.CatFilter,
+    cat_id: dto.CatID,
 ) -> None:
     excepted_cat = dto.CatUrl
     mock_cat_model_partial_update_cat.return_value = excepted_cat
-    result = await cat_domain.partial_update_cat(partial_update_cat, cat_filter)
+    result = await cat_domain.partial_update_cat(partial_update_cat, cat_id)
     assert result == excepted_cat
-    mock_cat_model_partial_update_cat.assert_called_once_with(partial_update_cat, cat_filter)
+    mock_cat_model_partial_update_cat.assert_called_once_with(partial_update_cat, cat_id)
