@@ -121,3 +121,34 @@ async def test_delete_cat_error_entity_not_found(mock_cat_model_delete_cat: mock
     with pytest.raises(exceptions.CatNotFoundError):
         await cat_domain.delete_cat(cat_id)
     mock_cat_model_delete_cat.assert_called_once_with(cat_id)
+
+
+@pytest.mark.parametrize(
+    "partial_update_cat, cat_filter",
+    [
+        (
+            dto.PartialUpdateCat(
+                url="http://placekitten.com/200/300",
+            ),
+            dto.CatID("1"),
+        ),
+        (
+            dto.PartialUpdateCat(
+                url="http://placekitten.com/300/400",
+            ),
+            dto.CatID("2"),
+        ),
+    ],
+)
+@mock.patch("catapi.models.cat_model.partial_update_cat")
+@conftest.async_test
+async def test_partial_update_cat(
+    mock_cat_model_partial_update_cat: mock.Mock,
+    partial_update_cat: dto.PartialUpdateCat,
+    cat_filter: dto.CatFilter,
+) -> None:
+    excepted_cat = dto.CatUrl
+    mock_cat_model_partial_update_cat.return_value = excepted_cat
+    result = await cat_domain.partial_update_cat(partial_update_cat, cat_filter)
+    assert result == excepted_cat
+    mock_cat_model_partial_update_cat.assert_called_once_with(partial_update_cat, cat_filter)
