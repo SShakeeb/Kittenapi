@@ -121,15 +121,16 @@ async def delete_cat(cat_id: dto.CatID) -> bool:
 
 async def partial_update_cat(
     partial_update_cat: dto.PartialUpdateCat, cat_filter: dto.CatFilter
-) -> dto.Cat:
+) -> Optional[dto.Cat]:
     collection = await get_collection(_COLLECTION_NAME)
     add_url = partial_update_cat.dict(exclude_none=True)
     query = {"_id": ObjectId(cat_filter.cat_id)}
-    print("query",query)
-    print("add_url",add_url)
+    print("query", query)
+    print("add_url", add_url)
     result = collection.update_one(query, {"$set": add_url})
-    if not result.matched_count:
+    if not result:
         raise CatNotFoundError(f"Cat {cat_filter.cat_id} did not found")
+    return await find_one(cat_filter)
 
 
 def cat_sort_params_to_db_sort(
