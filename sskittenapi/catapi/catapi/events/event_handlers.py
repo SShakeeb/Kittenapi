@@ -1,8 +1,10 @@
+import asyncio
 import logging
 from typing import Callable, Mapping
 
 from catapi import dto
-from catapi.exceptions import EventException
+from catapi.domains import cat_domain
+from catapi.exceptions import CatNotFoundError, EventException
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,17 @@ def handle_cat_created(data: dto.JSON) -> None:
 
     logger.info(f"[{event_id}] Cat {cat_id} has been created")
     # TODO: Handle the async postprocessing of a created Cat here.
+    
+    cat_partial_update = dto.PartialUpdateCat(url=["http://placekitten.com/200/300"])
+    cat_filter = dto.CatFilter(cat_id=data["cat_id"])
+    print("Iam",cat_partial_update)
+    loop = asyncio.get_event_loop()
+    updated_cat = cat_domain.partial_update_cat(cat_partial_update, cat_filter)
+    loop.run_until_complete(updated_cat)
+    if not updated_cat:
+        exception_message = f"Cannot find cat: {updated_cat}"
+        raise CatNotFoundError(exception_message)
+    return None
 
 
 EVENT_HANDLERS: Mapping[str, Callable] = {

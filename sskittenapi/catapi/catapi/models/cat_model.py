@@ -8,7 +8,12 @@ import pymongo.errors
 from bson import ObjectId
 
 from catapi import config, dto
-from catapi.exceptions import CatNotDeleteError, DuplicateCatError, EmptyResultsFilter
+from catapi.exceptions import (
+    CatNotDeleteError,
+    CatNotFoundError,
+    DuplicateCatError,
+    EmptyResultsFilter,
+)
 from catapi.models.common import (
     BSONDocument,
     _calculate_db_skip_value,
@@ -112,6 +117,19 @@ async def delete_cat(cat_id: dto.CatID) -> bool:
     if not result:
         raise CatNotDeleteError(f"Cat {cat_id} did not deleted.")
     return result.deleted_count == 1
+
+
+async def partial_update_cat(
+    partial_update_cat: dto.PartialUpdateCat, cat_filter: dto.CatFilter
+) -> dto.Cat:
+    collection = await get_collection(_COLLECTION_NAME)
+    add_url = partial_update_cat.dict(exclude_none=True)
+    query = {"_id": ObjectId(cat_filter.cat_id)}
+    print("query",query)
+    print("add_url",add_url)
+    result = collection.update_one(query, {"$set": add_url})
+    if not result.matched_count:
+        raise CatNotFoundError(f"Cat {cat_filter.cat_id} did not found")
 
 
 def cat_sort_params_to_db_sort(

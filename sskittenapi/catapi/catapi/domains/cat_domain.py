@@ -35,3 +35,13 @@ async def delete_cat(cat_id: dto.CatID) -> bool:
     if not deleted:
         raise exceptions.CatNotFoundError(f"Cat {cat_id} does not exists.")
     return deleted
+
+
+async def partial_update_cat(
+    partial_update_cat: dto.PartialUpdateCat, cat_filter: dto.CatFilter
+) -> dto.Cat:
+    cat = await cat_model.partial_update_cat(
+        partial_update_cat,
+        cat_filter,
+    )
+    return cat
