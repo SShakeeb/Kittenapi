@@ -147,7 +147,7 @@ async def test_partial_update_cat(
     partial_update_cat: dto.PartialUpdateCat,
     cat_id: dto.CatID,
 ) -> None:
-    excepted_cat = dto.CatUrl
+    excepted_cat = dto.Cat
     mock_cat_model_partial_update_cat.return_value = excepted_cat
     result = await cat_domain.partial_update_cat(partial_update_cat, cat_id)
     assert result == excepted_cat

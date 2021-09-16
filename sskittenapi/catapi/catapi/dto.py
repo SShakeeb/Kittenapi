@@ -89,14 +89,6 @@ class Cat(BaseModel):
     mtime: datetime
 
 
-class CatUrl(BaseModel):
-    id: CatID
-    name: Optional[str]
-    ctime: Optional[datetime]
-    mtime: Optional[datetime]
-    url: Optional[str]
-
-
 class CatSummary(BaseModel):
     id: CatID
     name: str
