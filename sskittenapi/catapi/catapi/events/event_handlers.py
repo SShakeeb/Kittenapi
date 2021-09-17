@@ -55,7 +55,7 @@ def handle_cat_created(data: dto.JSON) -> None:
     if not coroutine:
         exception_message = f"Cannot find cat: {coroutine}"
         raise CatNotFoundError(exception_message)
-    logger.info(f"[{event_id}] User {user_id} has been updated")
+    logger.info(f"[{event_id}] Cat {cat_id} has been updated")
 
 
 EVENT_HANDLERS: Mapping[str, Callable] = {

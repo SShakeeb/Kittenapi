@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path, status
 from catapi import dto, serializers
 from catapi.domains import cat_domain
 from catapi.events.cat_events import fire_cat_created
+
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
