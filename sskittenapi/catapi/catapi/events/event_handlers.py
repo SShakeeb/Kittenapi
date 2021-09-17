@@ -27,8 +27,7 @@ def handle_ping(data: dto.JSON) -> None:
 def handle_cat_created(data: dto.JSON) -> None:
     event_id = data.get("event_id")
     cat_id = data.get("cat_id")
-    partial_update_cat = data.get("partial_update_cat")
-    required_keys = {"cat_id", "partial_update_cat"}
+    required_keys = {"cat_id"}
 
     if not all(key in data for key in required_keys):
         exception_message = (
@@ -40,30 +39,23 @@ def handle_cat_created(data: dto.JSON) -> None:
 
     logger.info(f"[{event_id}] Cat {cat_id} has been created")
     # TODO: Handle the async postprocessing of a created Cat here.
-    try:
-        partial_update_cat = dto.PartialUpdateCat.parse_obj(partial_update_cat)
-    except ValueError:
-        exception_message = (
-            f"Cannot process event: invalid partial update. Got: {partial_update_cat}"
-        )
-        logger.exception(f"[{event_id}] {exception_message}")
-        raise EventException(exception_message)
 
+    cat_partial_update = dto.PartialUpdateCat(url="http://placekitten.com/200/300")
     cat_id = dto.CatID(data["cat_id"])
-    #print("Iam", partial_update_cat)
+    print("Iam", cat_partial_update)
     loop = asyncio.get_event_loop()
-    #print("loop", loop)
+    print("loop", loop)
     coroutine = cat_domain.partial_update_cat(
-        partial_update_cat=partial_update_cat,
+        partial_update_cat=cat_partial_update,
         cat_id=cat_id,
     )
-    #print("Iaminloop", coroutine)
+    print("Iaminloop", coroutine)
     loop.run_until_complete(coroutine)
-    #print("Iamoutloop", coroutine)
+    print("Iamoutloop", coroutine)
     if not coroutine:
         exception_message = f"Cannot find cat: {coroutine}"
         raise CatNotFoundError(exception_message)
-    return None
+    logger.info(f"[{event_id}] User {user_id} has been updated")
 
 
 EVENT_HANDLERS: Mapping[str, Callable] = {

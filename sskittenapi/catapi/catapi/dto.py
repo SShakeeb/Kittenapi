@@ -95,7 +95,7 @@ class CatSummary(BaseModel):
 
 
 class PartialUpdateCat(BaseModel):
-    url: Optional[str] = "http://placekitten.com/200/300"
+    url: Optional[str]
 
 
 class CatFilter(BaseModel):
