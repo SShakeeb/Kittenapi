@@ -42,19 +42,13 @@ def handle_cat_created(data: dto.JSON) -> None:
 
     cat_partial_update = dto.PartialUpdateCat(url="http://placekitten.com/200/300")
     cat_id = dto.CatID(data["cat_id"])
-    print("Iam", cat_partial_update)
     loop = asyncio.get_event_loop()
-    print("loop", loop)
     coroutine = cat_domain.partial_update_cat(
         partial_update_cat=cat_partial_update,
         cat_id=cat_id,
     )
-    print("Iaminloop", coroutine)
     loop.run_until_complete(coroutine)
-    print("Iamoutloop", coroutine)
-    if not coroutine:
-        exception_message = f"Cannot find cat: {coroutine}"
-        raise CatNotFoundError(exception_message)
+
     logger.info(f"[{event_id}] Cat {cat_id} has been updated")
 
 
