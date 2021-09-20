@@ -352,3 +352,42 @@ async def test_delete_cat_successful(
     deleted_cat = await cat_model.delete_cat(cat_id)
 
     assert deleted_cat == deleted_cat
+
+
+@pytest.mark.parametrize(
+    "existing_cat_documents, cat_url, expected_cat, cat_id",
+    [
+        (
+            [
+                {
+                    "_id": ObjectId("000000000000000000000101"),
+                    "name": "Sammybridge Cat",
+                    "ctime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                    "mtime": datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                },
+            ],
+            dto.PartialUpdateCat(
+                url="http://placekitten.com/200/300",
+            ),
+            dto.Cat(
+                id=dto.CatID("000000000000000000000101"),
+                name="Sammybridge Cat",
+                ctime=datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                mtime=datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                url="http://placekitten.com/200/300",
+            ),
+            dto.CatID("000000000000000000000101"),
+        ),
+    ],
+)
+@conftest.async_test
+async def test_partial_update_cat(
+    existing_cat_documents: List[BSONDocument],
+    cat_url: dto.PartialUpdateCat,
+    expected_cat: Optional[dto.Cat],
+    cat_id: dto.CatID,
+) -> None:
+    collection = await get_collection(cat_model._COLLECTION_NAME)
+    await collection.insert_many(existing_cat_documents)
+    result = await cat_model.partial_update_cat(cat_url, cat_id)
+    assert result == expected_cat

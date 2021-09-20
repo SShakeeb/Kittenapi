@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path, status
 
 from catapi import dto, serializers
 from catapi.domains import cat_domain
+from catapi.events.cat_events import fire_cat_created
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -22,6 +23,8 @@ async def create_cat(unsaved_cat: dto.UnsavedCat) -> dto.JSON:
     :return:
     """
     cat = await cat_domain.create_cat(unsaved_cat)
+    if cat:
+        fire_cat_created(cat.id)
     return cat.dict()
 
 
