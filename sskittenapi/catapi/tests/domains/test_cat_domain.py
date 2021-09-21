@@ -124,15 +124,27 @@ async def test_delete_cat_error_entity_not_found(mock_cat_model_delete_cat: mock
 
 
 @pytest.mark.parametrize(
-    "partial_update_cat, cat_id",
+    "expected_cat, partial_update_cat, cat_id",
     [
         (
+            dto.Cat(
+                name="Sammybridge Cat",
+                id=dto.CatID("000000000000000000000001"),
+                mtime=datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                ctime=datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+            ),
             dto.PartialUpdateCat(
                 url="http://placekitten.com/200/300",
             ),
             dto.CatID("1"),
         ),
         (
+            dto.Cat(
+                name="Sammybridge Cat",
+                id=dto.CatID("000000000000000000000001"),
+                mtime=datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+                ctime=datetime(2020, 1, 1, 0, 0, tzinfo=UTC),
+            ),
             dto.PartialUpdateCat(
                 url="http://placekitten.com/300/400",
             ),
@@ -144,11 +156,12 @@ async def test_delete_cat_error_entity_not_found(mock_cat_model_delete_cat: mock
 @conftest.async_test
 async def test_partial_update_cat(
     mock_cat_model_partial_update_cat: mock.Mock,
+    expected_cat: dto.Cat,
     partial_update_cat: dto.PartialUpdateCat,
     cat_id: dto.CatID,
 ) -> None:
-    excepted_cat = dto.Cat
-    mock_cat_model_partial_update_cat.return_value = excepted_cat
+    expected_cat = expected_cat
+    mock_cat_model_partial_update_cat.return_value = expected_cat
     result = await cat_domain.partial_update_cat(partial_update_cat, cat_id)
-    assert result == excepted_cat
+    assert result == expected_cat
     mock_cat_model_partial_update_cat.assert_called_once_with(partial_update_cat, cat_id)
