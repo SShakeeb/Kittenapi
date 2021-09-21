@@ -128,7 +128,9 @@ async def partial_update_cat(
     result = await collection.update_one(query, {"$set": add_url})
     if not result.matched_count:
         raise CatNotFoundError(f"Cat {cat_id} did not found")
-    return await find_one(cat_filter=dto.CatFilter(cat_id=cat_id))
+    updated_cat = await find_one(cat_filter=dto.CatFilter(cat_id=cat_id))
+    assert updated_cat is not None
+    return updated_cat
 
 
 def cat_sort_params_to_db_sort(

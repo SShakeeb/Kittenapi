@@ -4,7 +4,7 @@ from typing import Callable, Mapping
 
 from catapi import dto
 from catapi.domains import cat_domain
-from catapi.exceptions import CatNotFoundError, EventException
+from catapi.exceptions import EventException
 
 logger = logging.getLogger(__name__)
 
